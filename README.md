@@ -1,9 +1,15 @@
 Large Sparse Matrix Library
 ===========================
 
+Current Status
+--------------
 
-Standalone
-----------
+| System | Compiler | Status |
+| ------ | -------- | ------ |
+| MacOSX, Linux 64 bits | Clang 3.4, Clang 3.8, GCC 4.9 | [![Travis CI](https://travis-ci.org/loganbarnes/lsm.svg?branch=master)](https://travis-ci.org/loganbarnes/lsm)
+
+Standalone Usage
+----------------
 
 ### Download
 
@@ -30,7 +36,7 @@ cmake --build .
 ```
 
 
-Existing CMake Project
-----------------------
+Existing CMake Project Integration
+----------------------------------
 
 Recommend including this library in the same way Google Test is used on [this blog](https://crascit.com/2015/07/25/cmake-gtest/).
