@@ -6,7 +6,7 @@ Current Status
 
 | System | Compiler | Status |
 | ------ | -------- | ------ |
-| MacOSX, Linux 64 bits | Clang 3.4, Clang 3.8, GCC 4.9 | [![Travis CI](https://travis-ci.org/loganbarnes/lsm.svg?branch=master)](https://travis-ci.org/loganbarnes/lsm)
+| MacOSX, Linux 64 bits | Clang 3.4, Clang 3.8, GCC 4.9 | [![Travis CI](https://travis-ci.org/loganbarnes/lsm.svg?branch=master)](https://travis-ci.org/loganbarnes/lsm)|
 
 Standalone Usage
 ----------------
