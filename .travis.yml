@@ -8,17 +8,56 @@ os:
 
 language: cpp
 
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: COMPILER=g++-4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang++-3.8
+
 compiler:
   - clang
-  - gcc
 
 before_script:
-  - cmake -E make_directory build
-  - cmake -E chdir build cmake -DCMAKE_BUILD_TYPE=Release ..
 
 script:
-  - cmake --build . --config Release -- -j12
+  - cmake -E make_directory build_release_cpu
+  - cmake -E chdir build_release_cpu cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=OFF ..
+  - cmake -E chdir build_release_cpu cmake --build . --config Release -- -j12
+  - cmake -E chdir build_release_cpu ctest
+  - cmake -E make_directory build_release_gpu
+  - cmake -E chdir build_release_gpu cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=ON ..
+  - cmake -E chdir build_release_gpu cmake --build . --config Release -- -j12
+  - cmake -E chdir build_release_gpu ctest
+  - cmake -E make_directory build_debug_cpu
+  - cmake -E chdir build_debug_cpu cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=OFF ..
+  - cmake -E chdir build_debug_cpu cmake --build . --config Debug -- -j12
+  - cmake -E chdir build_debug_cpu ctest
+  - cmake -E make_directory build_debug_gpu
+  - cmake -E chdir build_debug_gpu cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=ON ..
+  - cmake -E chdir build_debug_gpu cmake --build . --config Debug -- -j12
+  - cmake -E chdir build_debug_gpu ctest
 
 after_script:
-  - cmake --build . --target test
-  
+

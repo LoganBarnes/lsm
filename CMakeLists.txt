@@ -2,6 +2,7 @@ cmake_minimum_required ( VERSION 3.6.0 )
 project ( LSMLibrary )
 
 option( BUILD_UNIT_TESTS OFF "Build unit tests for the LSM library" )
+option( USE_CUDA OFF "Compile with gpu acceleration capabilities" )
 
 # project dirs
 set( SRC_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/src     )
@@ -52,7 +53,9 @@ endif( )
 ####################
 #       CUDA       #
 ####################
-find_package( CUDA )
+if ( USE_CUDA )
+  find_package( CUDA )
+endif( )
 
 if ( CUDA_FOUND )
 
@@ -131,10 +134,12 @@ if ( BUILD_UNIT_TESTS )
   list(
        APPEND TESTING_SOURCE
 
-       ${SRC_DIR}/testing/TemplateUnitTests.cpp
        ${SRC_DIR}/testing/CpuMatrixUnitTests.cpp
-       ${SRC_DIR}/testing/GpuMatrixUnitTests.cpp
        )
+
+  if ( CUDA_FOUND )
+    list( APPEND TESTING_SOURCE ${SRC_DIR}/testing/GpuMatrixUnitTests.cpp )
+  endif( )
 
   add_executable( ${UNIT_TESTS_EXEC} ${TESTING_SOURCE} )
 
