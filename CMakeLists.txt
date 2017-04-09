@@ -72,7 +72,7 @@ if ( CUDA_FOUND )
   endif( )
 
   # Auto detect compute architecture
-  if ( NOT CUDA_ARCH_FLAGS )
+  if ( NOT ${CMAKE_VERSION} VERSION_LESS 3.7.1 AND NOT CUDA_ARCH_FLAGS )
     cuda_select_nvcc_arch_flags( CUDA_ARCH_FLAGS Auto )
     set( CUDA_ARCH_FLAGS ${CUDA_ARCH_FLAGS} CACHE STRING "gencode architecture flags for nvcc" )
   endif( )
