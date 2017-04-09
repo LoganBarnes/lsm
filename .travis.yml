@@ -10,34 +10,44 @@ language: cpp
 
 matrix:
   include:
-    - compiler: gcc
+    - env: CUDA=7.5-18 COMPILER=g++-4.9
+      compiler: gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
-      env: COMPILER=g++-4.9
-    - compiler: gcc
+
+    - env: CUDA=7.5-18 COMPILER=g++-5
+      compiler: gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-      env: COMPILER=clang++-3.8
 
-compiler:
-  - clang
+    # - env: CUDA=7.5-18 COMPILER=clang++-3.8
+    #   compiler: clang
+    #   addons:
+    #     apt:
+    #       sources:
+    #         - ubuntu-toolchain-r-test
+    #         - llvm-toolchain-precise-3.8
+    #       packages:
+    #         - clang-3.8
+
+# compiler:
+  # - clang
+
+before_install:
+  # Install the CUDA toolkit
+  - echo "Installing CUDA library"
+  - source .travis/install-cuda-trusty.sh
+
+install:
+  - nvcc --version
 
 before_script:
 
