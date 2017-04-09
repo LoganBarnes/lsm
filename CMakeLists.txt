@@ -112,29 +112,36 @@ if ( BUILD_UNIT_TESTS )
 
   include( cmake/DownloadProject.cmake )
 
-  # Download and unpack googletest at configure time
-  DownloadProject( cmake/CMakeLists.txt.googletest googletest )
+  download_project(
+                   PROJ                googletest
+                   GIT_REPOSITORY      https://github.com/google/googletest.git
+                   GIT_TAG             master
+                   UPDATE_DISCONNECTED 1
+                   QUIET
+                   )
 
   # Prevent overriding the parent project's compiler/linker settings on Windows
   set( gtest_force_THIRDPARTY_crt ON CACHE BOOL "" FORCE )
 
-  # Add googlemock directly to the project build
-  add_subdirectory( ${CMAKE_BINARY_DIR}/googletest-src/googlemock
-                    ${CMAKE_BINARY_DIR}/googletest-build )
+  add_subdirectory( ${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} )
 
   # Build unit tests executable
   set( UNIT_TESTS_EXEC test${PROJECT_NAME} )
 
-  add_executable(
-                 ${UNIT_TESTS_EXEC}
+  list(
+       APPEND TESTING_SOURCE
 
-                 ${SRC_DIR}/testing/TemplateUnitTests.cpp
-                 )
+       ${SRC_DIR}/testing/TemplateUnitTests.cpp
+       ${SRC_DIR}/testing/CpuMatrixUnitTests.cpp
+       ${SRC_DIR}/testing/GpuMatrixUnitTests.cpp
+       )
+
+  add_executable( ${UNIT_TESTS_EXEC} ${TESTING_SOURCE} )
 
   target_include_directories( ${UNIT_TESTS_EXEC} PUBLIC ${INC_DIR} )
   target_include_directories( ${UNIT_TESTS_EXEC} SYSTEM PUBLIC
-                              ${CMAKE_BINARY_DIR}/googletest-src/googlemock/include
-                              ${CMAKE_BINARY_DIR}/googletest-src/googletest/include )
+                              ${gtest_SOURCE_DIR}/include
+                              ${gmock_SOURCE_DIR}/include )
 
   target_link_libraries     ( ${UNIT_TESTS_EXEC} gmock gmock_main ${PROJECT_LIB_NAME} )
   add_dependencies          ( ${UNIT_TESTS_EXEC} gmock gmock_main ${PROJECT_LIB_NAME} )
@@ -145,5 +152,19 @@ if ( BUILD_UNIT_TESTS )
   if ( NOT MSVC )
     set_target_properties( ${UNIT_TESTS_EXEC} PROPERTIES COMPILE_FLAGS ${INTENSE_FLAGS} )
   endif( )
+
+  # Set up cmake testing
+  enable_testing()
+  include( CTest )
+
+  foreach( testFile ${TESTING_SOURCE} )
+
+    # remove '.cpp' and full path from test name
+    string( REPLACE ".cpp" "" testName ${testFile} )
+    string( REPLACE "${SRC_DIR}/testing/" "" testName ${testName} )
+
+    add_test( NAME ${testName} COMMAND ${UNIT_TESTS_EXEC} "--gtest_filter=${testName}*" )
+
+  endforeach( )
 
 endif( BUILD_UNIT_TESTS )

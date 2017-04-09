@@ -1,34 +1,31 @@
 #include "lsm/SparseMatrix.hpp"
-#include "lsm/gpu/SparseMatrixGpu.hpp"
 #include "gmock/gmock.h"
 
 
 namespace
 {
 
-constexpr float eps = 1.0e-7f;
-
 
 ///
-/// \brief The TemplateUnitTests class
+/// \brief The CpuMatrixUnitTests class
 ///
-class TemplateUnitTests : public ::testing::Test
+class CpuMatrixUnitTests : public ::testing::Test
 {
 
 protected:
 
   /////////////////////////////////////////////////////////////////
-  /// \brief TemplateUnitTests
+  /// \brief CpuMatrixUnitTests
   /////////////////////////////////////////////////////////////////
-  TemplateUnitTests( )
+  CpuMatrixUnitTests( )
   {}
 
 
   /////////////////////////////////////////////////////////////////
-  /// \brief ~TemplateUnitTests
+  /// \brief ~CpuMatrixUnitTests
   /////////////////////////////////////////////////////////////////
   virtual
-  ~TemplateUnitTests( )
+  ~CpuMatrixUnitTests( )
   {}
 
 
@@ -38,22 +35,19 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////
-/// \brief TemplatesCompile
+/// \brief CpuMatrixsCompile
 /////////////////////////////////////////////////////////////////
-TEST_F( TemplateUnitTests, TemplatesCompile )
+TEST_F( CpuMatrixUnitTests, CpuMatrixsCompile )
 {
   lsm::SparseMatrix< float > smf;
   lsm::SparseMatrix< double > smd;
-
-  lsm::SparseMatrixGpu< float > smgf;
-  lsm::SparseMatrixGpu< double > smgd;
 }
 
 
 /////////////////////////////////////////////////////////////////
 /// \brief FailureTest
 /////////////////////////////////////////////////////////////////
-TEST_F( TemplateUnitTests, FailureTest )
+TEST_F( CpuMatrixUnitTests, FailureTest )
 {
   ASSERT_TRUE( false ) << "test not implemented";
 }
