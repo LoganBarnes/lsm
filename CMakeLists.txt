@@ -2,7 +2,7 @@ cmake_minimum_required ( VERSION 3.2.2 )
 project ( LSMLibrary )
 
 option( BUILD_UNIT_TESTS OFF "Build unit tests for the LSM library" )
-option( USE_CUDA OFF "Compile with gpu acceleration capabilities" )
+option( USE_CUDA ON "Compile with gpu acceleration capabilities" )
 
 # project dirs
 set( SRC_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/src     )
