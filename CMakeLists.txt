@@ -1,8 +1,8 @@
 cmake_minimum_required ( VERSION 3.2.2 )
 project ( LSMLibrary )
 
-option( BUILD_UNIT_TESTS OFF "Build unit tests for the LSM library" )
-option( USE_CUDA ON "Compile with gpu acceleration capabilities" )
+option( TESTING_ENABLE "Build unit tests for the LSM library"       OFF )
+option( GPGPU_ENABLE   "Compile with gpu acceleration capabilities" ON  )
 
 # project dirs
 set( SRC_DIR  ${CMAKE_CURRENT_SOURCE_DIR}/src     )
@@ -53,7 +53,7 @@ endif( )
 ####################
 #       CUDA       #
 ####################
-if ( USE_CUDA )
+if ( GPGPU_ENABLE   )
   find_package( CUDA )
 endif( )
 
@@ -110,7 +110,7 @@ endif( CUDA_FOUND )
 #       Google Test       #
 ###########################
 
-if ( BUILD_UNIT_TESTS )
+if ( TESTING_ENABLE )
 
   include( cmake/DownloadProject.cmake )
 
@@ -171,4 +171,4 @@ if ( BUILD_UNIT_TESTS )
 
   endforeach( )
 
-endif( BUILD_UNIT_TESTS )
+endif( TESTING_ENABLE )

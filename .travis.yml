@@ -6,6 +6,9 @@ dist: trusty
 
 matrix:
   include:
+    - os:
+        - osx
+
     - env: CUDA=7.0-28 COMPILER=g++-4.9
       compiler: gcc
       addons:
@@ -15,54 +18,50 @@ matrix:
           packages:
             - g++-4.9
 
-    - env: CUDA=7.0-28
-      os:
-        - osx
+    - env: CUDA=7.0-28 COMPILER=g++-5
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
 
-    # - env: CUDA=7.0-28 COMPILER=g++-5
-    #   compiler: gcc
-    #   addons:
-    #     apt:
-    #       sources:
-    #         - ubuntu-toolchain-r-test
-    #       packages:
-    #         - g++-5
+    - env: CUDA=7.5-18 COMPILER=g++-4.9
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
 
-    # - env: CUDA=7.5-18 COMPILER=g++-4.9
-    #   compiler: gcc
-    #   addons:
-    #     apt:
-    #       sources:
-    #         - ubuntu-toolchain-r-test
-    #       packages:
-    #         - g++-4.9
+    - env: CUDA=7.5-18 COMPILER=g++-5
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
 
-    # - env: CUDA=7.5-18 COMPILER=g++-5
-    #   compiler: gcc
-    #   addons:
-    #     apt:
-    #       sources:
-    #         - ubuntu-toolchain-r-test
-    #       packages:
-    #         - g++-5
+    - env: CUDA=8.0.44-1 COMPILER=g++-4.9
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
 
-    # - env: CUDA=8.0.44-1 COMPILER=g++-4.9
-    #   compiler: gcc
-    #   addons:
-    #     apt:
-    #       sources:
-    #         - ubuntu-toolchain-r-test
-    #       packages:
-    #         - g++-4.9
-
-    # - env: CUDA=8.0.44-1 COMPILER=g++-5
-    #   compiler: gcc
-    #   addons:
-    #     apt:
-    #       sources:
-    #         - ubuntu-toolchain-r-test
-    #       packages:
-    #         - g++-5
+    - env: CUDA=8.0.44-1 COMPILER=g++-5
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
 
     # - env: CUDA=7.5-18 COMPILER=clang++-3.8
     #   compiler: clang
@@ -78,8 +77,9 @@ matrix:
 before_install:
   # Install the CUDA toolkit
   - echo "Installing CUDA library"
-  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then brew update; fi
-  - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then brew install cuda$CUDA; else source .travis/install-cuda-trusty.sh; fi
+  # - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then brew update; fi
+  # - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then brew install Caskroom/cask/cuda; else source .travis/install-cuda-trusty.sh; fi
+  - source .travis/install-cuda-trusty.sh
 
 install:
   - nvcc --version
@@ -88,20 +88,20 @@ before_script:
 
 script:
   - cmake -E make_directory build_release_cpu
-  - cmake -E chdir build_release_cpu cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=OFF ..
+  - cmake -E chdir build_release_cpu cmake -DCMAKE_BUILD_TYPE=Release -DTESTING_ENABLE=ON -DGPGPU_ENABLE=OFF ..
   - cmake -E chdir build_release_cpu cmake --build . --config Release -- -j12
   - ./build_release_cpu/testLSMLibrary
 
   - cmake -E make_directory build_release_gpu
-  - cmake -E chdir build_release_gpu cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=ON ..
+  - cmake -E chdir build_release_gpu cmake -DCMAKE_BUILD_TYPE=Release -DTESTING_ENABLE=ON -DGPGPU_ENABLE=ON ..
   - cmake -E chdir build_release_gpu cmake --build . --config Release -- -j12
 
   - cmake -E make_directory build_debug_cpu
-  - cmake -E chdir build_debug_cpu cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=OFF ..
+  - cmake -E chdir build_debug_cpu cmake -DCMAKE_BUILD_TYPE=Debug -DTESTING_ENABLE=ON -DGPGPU_ENABLE=OFF ..
   - cmake -E chdir build_debug_cpu cmake --build . --config Debug -- -j12
   - ./build_debug_cpu/testLSMLibrary
 
   - cmake -E make_directory build_debug_gpu
-  - cmake -E chdir build_debug_gpu cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_UNIT_TESTS=ON -DUSE_CUDA=ON ..
+  - cmake -E chdir build_debug_gpu cmake -DCMAKE_BUILD_TYPE=Debug -DTESTING_ENABLE=ON -DGPGPU_ENABLE=ON ..
   - cmake -E chdir build_debug_gpu cmake --build . --config Debug -- -j12
 
