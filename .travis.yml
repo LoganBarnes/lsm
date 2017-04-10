@@ -9,24 +9,6 @@ matrix:
     - os:
         - osx
 
-    - env: CUDA=7.0-28 COMPILER=g++-4.9
-      compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
-
-    - env: CUDA=7.0-28 COMPILER=g++-5
-      compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-
     - env: CUDA=7.5-18 COMPILER=g++-4.9
       compiler: gcc
       addons:
@@ -79,10 +61,10 @@ before_install:
   - echo "Installing CUDA library"
   # - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then brew update; fi
   # - if [[ $TRAVIS_OS_NAME == 'osx' ]]; then brew install Caskroom/cask/cuda; else source .travis/install-cuda-trusty.sh; fi
-  - source .travis/install-cuda-trusty.sh
+  - if [[ $TRAVIS_OS_NAME != 'osx' ]]; then source .travis/install-cuda-trusty.sh; fi
 
 install:
-  - nvcc --version
+  - if [[ $TRAVIS_OS_NAME != 'osx' ]]; then nvcc --version; fi
 
 before_script:
 
