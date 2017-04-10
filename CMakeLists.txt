@@ -79,7 +79,6 @@ if ( CUDA_FOUND )
 
   list( APPEND CUDA_NVCC_FLAGS ${CUDA_ARCH_FLAGS} --std=c++11 --expt-relaxed-constexpr )
 
-
   set( CUDA_LIB gpu${PROJECT_NAME} )
 
   # build CUDA library
