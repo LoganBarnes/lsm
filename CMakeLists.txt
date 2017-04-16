@@ -53,7 +53,7 @@ endif( )
 ####################
 #       CUDA       #
 ####################
-if ( GPGPU_ENABLE   )
+if ( GPGPU_ENABLE )
   find_package( CUDA )
 endif( )
 

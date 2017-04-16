@@ -21,7 +21,9 @@ public:
 
 private:
 
-  std::vector< T > dataPlaceholder_;
+  std::vector< unsigned long > rowIndices_;
+  std::vector< unsigned long > colIndices_;
+  std::vector< T > values_;
 
 };
 
